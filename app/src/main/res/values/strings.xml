@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Fizz Buzz</string>
+    <string name="play">PLAY NOW</string>
+    <string name="nickname">Add your nickname</string>
+    <string name="exit_text">Are you sure you want to close app?</string>
 </resources>
