@@ -1,10 +1,10 @@
 package com.example.fizzbuzz.ui.presentation.home_screen
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,37 +25,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fizzbuzz.R
-import com.example.fizzbuzz.ui.presentation.home_screen.components.DialogWithImage
-import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
-import com.example.fizzbuzz.ui.theme.serifDisplayFontFamily
+import com.example.fizzbuzz.ui.presentation.home_screen.components.ExitDialog
+import com.example.fizzbuzz.ui.presentation.home_screen.components.NicknameDisplay
+import com.example.fizzbuzz.ui.presentation.home_screen.intent.HomeIntent
 
 @Composable
-fun HomeScreen(navigateToPlayGameScreen: () -> Unit) {
-    var showDialog by remember { mutableStateOf(false) }
+fun HomeScreen(
+    navigateToPlayGameScreen: () -> Unit,
+    navigateToLeaderboardScreen: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
     var showExitDialog by remember { mutableStateOf(false) }
+    val activity = LocalContext.current as? ComponentActivity
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Box(
+
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(color = MaterialTheme.colorScheme.primary)
+//    ) {
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
+            .background(color = MaterialTheme.colorScheme.primary),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.primary),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+                .weight(1f),
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -68,7 +78,7 @@ fun HomeScreen(navigateToPlayGameScreen: () -> Unit) {
                     contentDescription = "History",
                     modifier = Modifier
                         .size(45.dp)
-                        .clickable {  },
+                        .clickable(onClick = navigateToLeaderboardScreen),
                     colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
                 )
 
@@ -78,42 +88,45 @@ fun HomeScreen(navigateToPlayGameScreen: () -> Unit) {
                     contentDescription = "Exit",
                     modifier = Modifier
                         .size(45.dp)
-                        .clickable {showExitDialog = true},
+                        .clickable { showExitDialog = true },
                     colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
                 )
             }
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = 30.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    modifier = Modifier
-                        .clickable { showDialog = true },
-                    text = stringResource(id = R.string.nickname),
-                    fontFamily = serifDisplayFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 25.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                NicknameDisplay(
+                    nickname = state.nickname,
+                    onNicknameSaved = { newNickname ->
+                        viewModel.processIntent(HomeIntent.EnterNickname(newNickname))
+                    }
                 )
             }
+        }
 
 
-            Image(
-                painter = painterResource(id = R.drawable.logo2),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .size(350.dp),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
-            )
+        Image(
+            painter = painterResource(id = R.drawable.logo2),
+            contentDescription = "Logo",
+            modifier = Modifier
+                .size(350.dp),
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
+        )
 
 
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 90.dp)
+        ) {
             Button(
                 onClick = navigateToPlayGameScreen,
-                modifier = Modifier
-                    .padding(bottom = 80.dp),
+                modifier = Modifier,
                 colors = ButtonDefaults.filledTonalButtonColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = MaterialTheme.colorScheme.primary
@@ -125,25 +138,20 @@ fun HomeScreen(navigateToPlayGameScreen: () -> Unit) {
                 )
             }
         }
-
-        if (showExitDialog) {
-            DialogWithImage(
-                onDismissRequest = { showExitDialog = false },
-                onConfirmation = {
-                    showDialog = false
-                },
-                painter = painterResource(id = R.drawable.exit_from_app),
-                imageDescription = "exit"
-            )
-
-        }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    FizzBuzzTheme {
-        HomeScreen(navigateToPlayGameScreen = {})
+    if (showExitDialog) {
+        ExitDialog(
+            onDismissRequest = { showExitDialog = false },
+            onConfirmation = {
+                activity?.finishAffinity()
+            },
+            painter = painterResource(id = R.drawable.exit_from_app),
+            imageDescription = "exit"
+        )
+
     }
+
+
+//    }
 }

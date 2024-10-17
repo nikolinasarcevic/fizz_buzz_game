@@ -5,6 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun LeaderboardScreen(navController: NavController) {
+fun LeaderboardScreen(navigateToLeaderboardScreen: () -> Unit) {
 
 }

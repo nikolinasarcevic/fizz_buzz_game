@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlinAndroidKsp)
 }
 
 android {
@@ -38,10 +42,11 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.5.1"
+//    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -70,4 +75,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation)
+    ksp(libs.hilt.compiler)
+
+    implementation (libs.timber)
+
+    implementation(libs.lifecycle.runtime.compose)
 }
