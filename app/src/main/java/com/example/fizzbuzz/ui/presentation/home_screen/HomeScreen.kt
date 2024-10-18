@@ -31,7 +31,6 @@ import com.example.fizzbuzz.ui.presentation.home_screen.components.HomeScreenHea
 import com.example.fizzbuzz.ui.presentation.home_screen.components.NicknameDialog
 import com.example.fizzbuzz.ui.presentation.home_screen.components.NicknameDisplay
 import com.example.fizzbuzz.ui.presentation.home_screen.intent.HomeIntent
-import timber.log.Timber
 
 @Composable
 fun HomeScreen(

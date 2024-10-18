@@ -32,6 +32,9 @@ fun Navigation() {
         }
         composable<Screen.Play> {
             PlayGameScreen(
+                navigateToLeaderboardScreen = {
+                    navController.navigate(Screen.Leaderboard)
+                }
             )
         }
         composable<Screen.End> {
