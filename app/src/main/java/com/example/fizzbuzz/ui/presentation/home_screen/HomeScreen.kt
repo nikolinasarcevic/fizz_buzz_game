@@ -3,12 +3,10 @@ package com.example.fizzbuzz.ui.presentation.home_screen
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -17,25 +15,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fizzbuzz.R
 import com.example.fizzbuzz.ui.presentation.home_screen.components.ExitDialog
+import com.example.fizzbuzz.ui.presentation.home_screen.components.HomeScreenHeader
+import com.example.fizzbuzz.ui.presentation.home_screen.components.NicknameDialog
 import com.example.fizzbuzz.ui.presentation.home_screen.components.NicknameDisplay
 import com.example.fizzbuzz.ui.presentation.home_screen.intent.HomeIntent
+import timber.log.Timber
 
 @Composable
 fun HomeScreen(
@@ -43,16 +39,9 @@ fun HomeScreen(
     navigateToLeaderboardScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    var showExitDialog by remember { mutableStateOf(false) }
-    val activity = LocalContext.current as? ComponentActivity
+
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(color = MaterialTheme.colorScheme.primary)
-//    ) {
+    val activity = LocalContext.current as? ComponentActivity
 
     Column(
         modifier = Modifier
@@ -66,46 +55,21 @@ fun HomeScreen(
             modifier = Modifier
                 .weight(1f),
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 42.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
 
-                Image(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.history),
-                    contentDescription = "History",
-                    modifier = Modifier
-                        .size(45.dp)
-                        .clickable(onClick = navigateToLeaderboardScreen),
-                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
-                )
+            HomeScreenHeader(
+                onClick = navigateToLeaderboardScreen,
+                onClickExit = {
+                    viewModel.processIntent(HomeIntent.ShowExitDialog)
+                }
+            )
 
+            NicknameDisplay(
+                nickname = state.nickname,
+                onClick = {
+                    viewModel.processIntent(HomeIntent.ShowNicknameDialog)
+                }
 
-                Image(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.exit),
-                    contentDescription = "Exit",
-                    modifier = Modifier
-                        .size(45.dp)
-                        .clickable { showExitDialog = true },
-                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.secondary)
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 30.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                NicknameDisplay(
-                    nickname = state.nickname,
-                    onNicknameSaved = { newNickname ->
-                        viewModel.processIntent(HomeIntent.EnterNickname(newNickname))
-                    }
-                )
-            }
+            )
         }
 
 
@@ -140,9 +104,9 @@ fun HomeScreen(
         }
     }
 
-    if (showExitDialog) {
+    if (state.exitDialog) {
         ExitDialog(
-            onDismissRequest = { showExitDialog = false },
+            onDismissRequest = { viewModel.processIntent(HomeIntent.DismissExitDialog) },
             onConfirmation = {
                 activity?.finishAffinity()
             },
@@ -152,6 +116,16 @@ fun HomeScreen(
 
     }
 
+    if (state.nicknameDialog) {
+        NicknameDialog(
+            onDismissRequest = { viewModel.processIntent(HomeIntent.DismissNicknameDialog) },
+            onConfirmation = { newNickname ->
+                viewModel.processIntent(HomeIntent.EnterNickname(newNickname))
+                viewModel.processIntent(HomeIntent.DismissNicknameDialog)
+            },
+            dialogTitle = "Your nickname",
+            currentNickname = state.nickname ?: ""
+        )
+    }
 
-//    }
 }

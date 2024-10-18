@@ -76,7 +76,8 @@ fun NicknameDialog(
             TextButton(
                 onClick = {
                     onConfirmation(nickname.value)
-                }
+                },
+                enabled = nickname.value.isNotBlank()
             ) {
                 Text("Save")
             }
@@ -102,7 +103,7 @@ fun NicknameDialogPreview() {
             onDismissRequest = {},
             onConfirmation = {},
             dialogTitle = stringResource(id = R.string.nickname),
-            currentNickname = ""
+            currentNickname = "",
         )
     }
 }

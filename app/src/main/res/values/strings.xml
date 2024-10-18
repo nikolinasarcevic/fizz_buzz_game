@@ -3,4 +3,5 @@
     <string name="play">PLAY NOW</string>
     <string name="nickname">Add your nickname</string>
     <string name="exit_text">Are you sure you want to close app?</string>
+    <string name="empty_nickname">Nickname can not be empty, please enter it!</string>
 </resources>
