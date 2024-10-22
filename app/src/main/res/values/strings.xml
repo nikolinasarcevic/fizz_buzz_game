@@ -9,4 +9,7 @@
     <string name="FizzBuzz">FIZZBUZZ</string>
     <string name="Next">NEXT</string>
     <string name="score">Your score:</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="show">Show time</string>
+    <string name="hide">Hide time</string>
 </resources>

@@ -11,7 +11,7 @@ interface ScoreDao {
     @Upsert
     suspend fun saveScore(score: Score)
 
-    @Query("SELECT * FROM score ORDER BY scoreValue ASC")
+    @Query("SELECT * FROM score ORDER BY scoreValue DESC")
     fun getLeaderboard(): Flow<List<Score>>
 
 //    @Query("SELECT * FROM score ORDER BY id DESC LIMIT 1")

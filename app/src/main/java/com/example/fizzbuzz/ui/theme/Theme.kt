@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 private val DarkColorScheme = darkColorScheme(
     primary = Green,
     secondary = CustomGray,
+    tertiary = LeaderboardItemGreen
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = CustomGray,
     secondary = Green,
+    tertiary = LeaderboardItemGray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

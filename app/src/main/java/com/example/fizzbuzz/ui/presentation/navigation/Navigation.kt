@@ -54,6 +54,9 @@ fun Navigation() {
         }
         composable<Screen.Leaderboard> {
             LeaderboardScreen(
+                onBackClick = {
+                    navController.navigateUp()
+                }
             )
         }
     }
