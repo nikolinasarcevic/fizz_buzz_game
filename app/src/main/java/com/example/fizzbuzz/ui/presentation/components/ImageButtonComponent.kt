@@ -18,14 +18,12 @@ fun ImageButtonComponent(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    size: Dp = 45.dp,
     tint: Color = MaterialTheme.colorScheme.secondary
 ) {
     Image(
         imageVector = imageVector,
         contentDescription = contentDescription,
         modifier = modifier
-            .size(size)
             .clickable(onClick = onClick),
         colorFilter = ColorFilter.tint(tint)
     )

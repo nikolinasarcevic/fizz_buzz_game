@@ -4,4 +4,9 @@
     <string name="nickname">Add your nickname</string>
     <string name="exit_text">Are you sure you want to close app?</string>
     <string name="empty_nickname">Nickname can not be empty, please enter it!</string>
+    <string name="Fizz">FIZZ</string>
+    <string name="Buzz">BUZZ</string>
+    <string name="FizzBuzz">FIZZBUZZ</string>
+    <string name="Next">NEXT</string>
+    <string name="score">Your score:</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,13 +35,17 @@ fun HomeScreenHeader(
         ImageButtonComponent(
             imageVector = ImageVector.vectorResource(id = R.drawable.history),
             contentDescription = "History",
-            onClick = onClick
+            onClick = onClick,
+            modifier = Modifier
+                .size(45.dp)
         )
 
         ImageButtonComponent(
             imageVector = ImageVector.vectorResource(id = R.drawable.exit),
             contentDescription = "Exit",
-            onClick = onClickExit
+            onClick = onClickExit,
+            modifier = Modifier
+                .size(45.dp)
         )
     }
 

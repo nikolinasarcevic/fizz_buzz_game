@@ -1,6 +1,7 @@
 package com.example.fizzbuzz.ui.presentation.play_game_screen.intent
 
-class PlayGameState {
-    val currentNumber: Int = 0
-    val score: Int = 0
-}
+data class PlayGameState (
+    val currentNumber: Int = 1,
+    val score: Int = 0,
+    val gameOver: Boolean = false
+)

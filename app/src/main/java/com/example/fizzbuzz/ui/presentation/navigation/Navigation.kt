@@ -32,21 +32,23 @@ fun Navigation() {
         }
         composable<Screen.Play> {
             PlayGameScreen(
-                navigateToLeaderboardScreen = {
-                    navController.navigate(Screen.Leaderboard)
+                navigateToEndScreen = {
+                    navController.navigate(Screen.End)
                 }
             )
         }
         composable<Screen.End> {
             EndScreen(
-                navController = navController
+                navigateToHomeScreen = {
+                    navController.navigate(Screen.Home)
+                },
+                navigateToPlayScreen = {
+                    navController.navigate(Screen.Play)
+                }
             )
         }
         composable<Screen.Leaderboard> {
             LeaderboardScreen(
-                navigateToLeaderboardScreen = {
-                    navController.navigate(Screen.Leaderboard)
-                }
             )
         }
     }
