@@ -5,14 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.fizzbuzz.database.Score
 import com.example.fizzbuzz.database.ScoreDao
 import com.example.fizzbuzz.domain.repository.NicknameRepository
+import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameEvent
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameIntent
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +23,9 @@ class PlayGameViewModel @Inject constructor(
     private val nicknameRepository: NicknameRepository
 ) : ViewModel() {
 
+    private val _gameOverChannel = Channel<PlayGameEvent>()
+    val gameOverChannel = _gameOverChannel.receiveAsFlow()
+
     private var _state = MutableStateFlow(PlayGameState())
 
     val state: StateFlow<PlayGameState>
@@ -28,8 +33,6 @@ class PlayGameViewModel @Inject constructor(
 
 
     fun processIntent(intent: PlayGameIntent) {
-        if (_state.value.gameOver) return
-
         when (intent) {
             PlayGameIntent.FizzClicked -> onFizzClick()
             PlayGameIntent.BuzzClicked -> onBuzzClick()
@@ -44,8 +47,10 @@ class PlayGameViewModel @Inject constructor(
 
             dao.saveScore(Score(nickname = latestNickname, scoreValue = _state.value.score))
 
+            _gameOverChannel.send(PlayGameEvent.GameOver)
+
             _state.update {
-                it.copy(currentNumber = 1, score = 0, gameOver = true)
+                it.copy(currentNumber = 1, score = 0)
             }
         }
     }
@@ -53,57 +58,40 @@ class PlayGameViewModel @Inject constructor(
     private fun onFizzClick() {
         if (_state.value.currentNumber % 3 == 0 && _state.value.currentNumber % 5 != 0) {
             _state.update {
-                val newScore = it.score + 1
-                it.copy(score = newScore, currentNumber = it.currentNumber + 1)
+                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
             }
-
         } else {
             endGame()
         }
     }
 
     private fun onBuzzClick() {
-        _state.update {
-            val newScore = if (it.currentNumber % 5 == 0 && it.currentNumber % 3 != 0) {
-                it.score + 1
-            } else {
-                endGame()
-                return
+        if (_state.value.currentNumber % 5 == 0 && _state.value.currentNumber % 3 != 0) {
+            _state.update {
+                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
             }
-
-            it.copy(score = newScore, currentNumber = it.currentNumber + 1)
-        }.also { newState ->
-
-            Timber.d("New State after buzz Click: $newState")
+        } else {
+            endGame()
         }
     }
 
     private fun onFizzBuzzClick() {
-        _state.update {
-            val newScore = if (it.currentNumber % 15 == 0) {
-                it.score + 1
-            } else {
-                endGame()
-                return
+        if (_state.value.currentNumber % 15 == 0) {
+            _state.update {
+                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
             }
-
-            it.copy(score = newScore, currentNumber = it.currentNumber + 1)
-        }.also { newState ->
-
-            Timber.d("New State after FizzBuzz Click: $newState")
+        } else {
+            endGame()
         }
     }
 
     private fun onNextClick() {
-        _state.update {
-            val newScore = if (it.currentNumber % 3 != 0 && it.currentNumber % 5 != 0) {
-                it.score + 1
-            } else {
-                Timber.d("Game over for number: ${it.score}")
-                endGame()
-                return
+        if (_state.value.currentNumber % 3 != 0 && _state.value.currentNumber % 5 != 0) {
+            _state.update {
+                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
             }
-            it.copy(score = newScore, currentNumber = it.currentNumber + 1)
+        } else {
+            endGame()
         }
     }
 }

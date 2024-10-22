@@ -14,7 +14,7 @@ interface ScoreDao {
     @Query("SELECT * FROM score ORDER BY scoreValue ASC")
     fun getLeaderboard(): Flow<List<Score>>
 
-    @Query("SELECT * FROM score ORDER BY id DESC LIMIT 1")
-    suspend fun getLatestScore(): Score?
+//    @Query("SELECT * FROM score ORDER BY id DESC LIMIT 1")
+//    suspend fun getLatestScore(): Score?
 
 }

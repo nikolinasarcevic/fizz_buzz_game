@@ -1,15 +1,12 @@
 package com.example.fizzbuzz.ui.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.fizzbuzz.ui.presentation.end_screen.EndScreen
 import com.example.fizzbuzz.ui.presentation.home_screen.HomeScreen
-import com.example.fizzbuzz.ui.presentation.home_screen.HomeViewModel
 import com.example.fizzbuzz.ui.presentation.leaderboard_screen.LeaderboardScreen
 import com.example.fizzbuzz.ui.presentation.play_game_screen.PlayGameScreen
 
@@ -32,18 +29,26 @@ fun Navigation() {
         }
         composable<Screen.Play> {
             PlayGameScreen(
-                navigateToEndScreen = {
-                    navController.navigate(Screen.End)
+                navigateToEndScreen = { score ->
+                    navController.navigate(Screen.End(score = score)) {
+                        popUpTo<Screen.Home> { inclusive = false }
+                    }
                 }
             )
         }
         composable<Screen.End> {
+            val endScreenScore = it.toRoute<Screen.End>()
             EndScreen(
+                endScreenScore,
                 navigateToHomeScreen = {
-                    navController.navigate(Screen.Home)
+                    navController.navigate(Screen.Home) {
+                        popUpTo<Screen.Home> { inclusive = true }
+                    }
                 },
                 navigateToPlayScreen = {
-                    navController.navigate(Screen.Play)
+                    navController.navigate(Screen.Play) {
+                        popUpTo<Screen.End> { inclusive = true }
+                    }
                 }
             )
         }
