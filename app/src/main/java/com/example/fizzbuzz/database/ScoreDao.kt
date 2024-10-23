@@ -14,6 +14,9 @@ interface ScoreDao {
     @Query("SELECT * FROM score ORDER BY scoreValue DESC")
     fun getLeaderboard(): Flow<List<Score>>
 
+    @Query("SELECT * FROM score WHERE nickname = :nickname LIMIT 1")
+    suspend fun getScoreByNickname(nickname: String): Score?
+
 //    @Query("SELECT * FROM score ORDER BY id DESC LIMIT 1")
 //    suspend fun getLatestScore(): Score?
 

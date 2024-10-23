@@ -20,10 +20,14 @@ fun Navigation() {
         composable<Screen.Home> {
             HomeScreen(
                 navigateToPlayGameScreen = {
-                    navController.navigate(Screen.Play)
+                    navController.navigate(Screen.Play) {
+                        popUpTo<Screen.Home> { inclusive = false }
+                    }
                 },
                 navigateToLeaderboardScreen = {
-                    navController.navigate(Screen.Leaderboard)
+                    navController.navigate(Screen.Leaderboard) {
+                        popUpTo<Screen.Home> { inclusive = false }
+                    }
                 }
             )
         }

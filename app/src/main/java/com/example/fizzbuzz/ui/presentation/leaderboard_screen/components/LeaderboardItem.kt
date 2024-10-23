@@ -24,7 +24,7 @@ fun LeaderboardItem(
     rank: Int,
     score: Score,
     backgroundColor: Color,
-    textColor: Color
+    textColor: Color,
 ) {
     Row(
         modifier = Modifier

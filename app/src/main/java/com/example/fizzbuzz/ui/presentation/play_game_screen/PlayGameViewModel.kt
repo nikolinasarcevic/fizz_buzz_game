@@ -32,6 +32,8 @@ class PlayGameViewModel @Inject constructor(
         get() = _state
 
 
+    private val startTime = System.currentTimeMillis()
+
     fun processIntent(intent: PlayGameIntent) {
         when (intent) {
             PlayGameIntent.FizzClicked -> onFizzClick()
@@ -45,13 +47,42 @@ class PlayGameViewModel @Inject constructor(
         viewModelScope.launch {
             val latestNickname = nicknameRepository.getNickname() ?: "Player"
 
-            dao.saveScore(Score(nickname = latestNickname, scoreValue = _state.value.score))
+            val existingScore = dao.getScoreByNickname(latestNickname)
+
+            if (existingScore != null) {
+
+                if (_state.value.score > existingScore.scoreValue) {
+
+                    val updatedScore = existingScore.copy(scoreValue = _state.value.score)
+                    dao.saveScore(updatedScore)
+                }
+            } else {
+
+                val newScore = Score(nickname = latestNickname, scoreValue = _state.value.score)
+                dao.saveScore(newScore)
+            }
 
             _gameOverChannel.send(PlayGameEvent.GameOver)
 
             _state.update {
                 it.copy(currentNumber = 1, score = 0)
             }
+        }
+    }
+
+    fun triggerGameOverEvent() {
+        endGame()
+    }
+
+    private fun calculateScore(): Int {
+        val elapsedTime = ((System.currentTimeMillis() - startTime) / 1000).toInt()
+        return when (elapsedTime) {
+            in 1..1 -> 1
+            in 2..2 -> 2
+            in 3..3 -> 3
+            in 4..4 -> 4
+            in 5..5 -> 5
+            else -> 0
         }
     }
 

@@ -1,34 +1,31 @@
 package com.example.fizzbuzz.ui.presentation.play_game_screen
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fizzbuzz.ui.presentation.play_game_screen.components.PlayButtons
+import com.example.fizzbuzz.ui.presentation.play_game_screen.components.PlayGameTimer
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameIntent
-import timber.log.Timber
+import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
 
 @Composable
 fun PlayGameScreen(
@@ -38,6 +35,7 @@ fun PlayGameScreen(
 
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var resetTimer by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.gameOverChannel.collect {
@@ -56,27 +54,26 @@ fun PlayGameScreen(
 
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .padding(top = 200.dp)
+                .padding(top = 200.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(180.dp)
-                    .border(
-                        border = BorderStroke(4.dp, MaterialTheme.colorScheme.secondary),
-                        shape = CircleShape
-                    )
-                    .clip(CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "${state.currentNumber}",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontSize = 80.sp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+
+            PlayGameTimer(
+                modifier = Modifier,
+                totalTime = 5,
+                onTimerFinished = {
+                        viewModel.triggerGameOverEvent()
+                },
+                inactiveBarColor = MaterialTheme.colorScheme.secondary,
+                activeBarColor = MaterialTheme.colorScheme.tertiary,
+                onTimerReset = { resetTimer = false },
+                resetTimer = resetTimer,
+                displayText = "${state.currentNumber}",
+                onTimeTick = {}
+            )
         }
 
         Row(
@@ -87,13 +84,33 @@ fun PlayGameScreen(
         ) {
             PlayButtons(
                 onClickFizz = {
+                    resetTimer = true
                     viewModel.processIntent(PlayGameIntent.FizzClicked)
                 },
-                onClickBuzz = { viewModel.processIntent(PlayGameIntent.BuzzClicked) },
-                onClickFizzBuzz = { viewModel.processIntent(PlayGameIntent.FizzBuzzClicked) },
-                onClickNext = { viewModel.processIntent(PlayGameIntent.NextClicked) }
+                onClickBuzz = {
+                    resetTimer = true
+                    viewModel.processIntent(PlayGameIntent.BuzzClicked)
+                },
+                onClickFizzBuzz = {
+                    resetTimer = true
+                    viewModel.processIntent(PlayGameIntent.FizzBuzzClicked)
+                },
+                onClickNext = {
+                    resetTimer = true
+                    viewModel.processIntent(PlayGameIntent.NextClicked)
+                }
             )
+
         }
 
     }
+}
+
+@Preview
+@Composable
+private fun PreviewPlayGame() {
+    FizzBuzzTheme {
+        PlayGameScreen(navigateToEndScreen = {})
+    }
+
 }

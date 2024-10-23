@@ -20,6 +20,7 @@ fun ImageButtonComponent(
     modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.secondary
 ) {
+
     Image(
         imageVector = imageVector,
         contentDescription = contentDescription,

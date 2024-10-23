@@ -1,6 +1,5 @@
 package com.example.fizzbuzz.ui.presentation.leaderboard_screen.components
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
