@@ -98,7 +98,9 @@ fun LeaderboardScreen(
                     rank = index + 1,
                     score = score,
                     backgroundColor = backgroundColor,
-                    textColor = textColor
+                    textColor = textColor,
+                    isTimeVisible = isInfoVisible.value,
+                    dateTextColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
                 )
             }
 
@@ -110,14 +112,6 @@ fun LeaderboardScreen(
         }
 
 
-    }
-
-    if (isInfoVisible.value) {
-        Text(
-            text = "informacije",
-            modifier = Modifier
-                .padding(start = 50.dp, top = 200.dp)
-        )
     }
 
 }

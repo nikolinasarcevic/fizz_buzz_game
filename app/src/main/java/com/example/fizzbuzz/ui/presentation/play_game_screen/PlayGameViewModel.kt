@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,14 +33,12 @@ class PlayGameViewModel @Inject constructor(
         get() = _state
 
 
-    private val startTime = System.currentTimeMillis()
-
     fun processIntent(intent: PlayGameIntent) {
         when (intent) {
-            PlayGameIntent.FizzClicked -> onFizzClick()
-            PlayGameIntent.BuzzClicked -> onBuzzClick()
-            PlayGameIntent.FizzBuzzClicked -> onFizzBuzzClick()
-            PlayGameIntent.NextClicked -> onNextClick()
+            is PlayGameIntent.FizzClicked -> onFizzClick(intent.remainingSeconds)
+            is PlayGameIntent.BuzzClicked -> onBuzzClick(intent.remainingSeconds)
+            is PlayGameIntent.FizzBuzzClicked -> onFizzBuzzClick(intent.remainingSeconds)
+            is PlayGameIntent.NextClicked -> onNextClick(intent.remainingSeconds)
         }
     }
 
@@ -50,15 +49,19 @@ class PlayGameViewModel @Inject constructor(
             val existingScore = dao.getScoreByNickname(latestNickname)
 
             if (existingScore != null) {
-
                 if (_state.value.score > existingScore.scoreValue) {
-
-                    val updatedScore = existingScore.copy(scoreValue = _state.value.score)
+                    val updatedScore =
+                        existingScore.copy(scoreValue = _state.value.score, playedAt = LocalDateTime.now())
                     dao.saveScore(updatedScore)
+                    _state.value.isHighScore = true
                 }
             } else {
-
-                val newScore = Score(nickname = latestNickname, scoreValue = _state.value.score)
+                _state.value.isHighScore = false
+                val newScore = Score(
+                    nickname = latestNickname,
+                    scoreValue = _state.value.score,
+                    playedAt = LocalDateTime.now()
+                )
                 dao.saveScore(newScore)
             }
 
@@ -74,52 +77,52 @@ class PlayGameViewModel @Inject constructor(
         endGame()
     }
 
-    private fun calculateScore(): Int {
-        val elapsedTime = ((System.currentTimeMillis() - startTime) / 1000).toInt()
-        return when (elapsedTime) {
-            in 1..1 -> 1
-            in 2..2 -> 2
-            in 3..3 -> 3
-            in 4..4 -> 4
-            in 5..5 -> 5
-            else -> 0
-        }
-    }
-
-    private fun onFizzClick() {
+    private fun onFizzClick(remainingSeconds: Int) {
         if (_state.value.currentNumber % 3 == 0 && _state.value.currentNumber % 5 != 0) {
             _state.update {
-                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
+                it.copy(
+                    score = it.score + remainingSeconds,
+                    currentNumber = it.currentNumber + 1
+                )
             }
         } else {
             endGame()
         }
     }
 
-    private fun onBuzzClick() {
+    private fun onBuzzClick(remainingSeconds: Int) {
         if (_state.value.currentNumber % 5 == 0 && _state.value.currentNumber % 3 != 0) {
             _state.update {
-                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
+                it.copy(
+                    score = it.score + remainingSeconds,
+                    currentNumber = it.currentNumber + 1
+                )
             }
         } else {
             endGame()
         }
     }
 
-    private fun onFizzBuzzClick() {
+    private fun onFizzBuzzClick(remainingSeconds: Int) {
         if (_state.value.currentNumber % 15 == 0) {
             _state.update {
-                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
+                it.copy(
+                    score = it.score + remainingSeconds,
+                    currentNumber = it.currentNumber + 1
+                )
             }
         } else {
             endGame()
         }
     }
 
-    private fun onNextClick() {
+    private fun onNextClick(remainingSeconds: Int) {
         if (_state.value.currentNumber % 3 != 0 && _state.value.currentNumber % 5 != 0) {
             _state.update {
-                it.copy(score = it.score + 1, currentNumber = it.currentNumber + 1)
+                it.copy(
+                    score = it.score + remainingSeconds,
+                    currentNumber = it.currentNumber + 1
+                )
             }
         } else {
             endGame()

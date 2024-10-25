@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -29,7 +31,7 @@ import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
 
 @Composable
 fun PlayGameScreen(
-    navigateToEndScreen: (score: Int) -> Unit,
+    navigateToEndScreen: (score: Int, isHighScore: Boolean) -> Unit,
     viewModel: PlayGameViewModel = hiltViewModel(),
 ) {
 
@@ -37,10 +39,15 @@ fun PlayGameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     var resetTimer by rememberSaveable { mutableStateOf(false) }
 
+    val totalTime = 5
+
+    var remainingSeconds by rememberSaveable { mutableIntStateOf(totalTime) }
+
+
     LaunchedEffect(Unit) {
         viewModel.gameOverChannel.collect {
             Toast.makeText(context, "Game Over!", Toast.LENGTH_SHORT).show()
-            navigateToEndScreen(state.score)
+            navigateToEndScreen(state.score, state.isHighScore)
         }
     }
 
@@ -55,15 +62,29 @@ fun PlayGameScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 20.dp, top = 50.dp),
+            horizontalArrangement = Arrangement.Absolute.Left,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(
+                text = "Score: ${state.score}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .padding(top = 200.dp),
+                .padding(top = 100.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             PlayGameTimer(
                 modifier = Modifier,
-                totalTime = 5,
+                totalTime = totalTime,
                 onTimerFinished = {
                         viewModel.triggerGameOverEvent()
                 },
@@ -72,7 +93,7 @@ fun PlayGameScreen(
                 onTimerReset = { resetTimer = false },
                 resetTimer = resetTimer,
                 displayText = "${state.currentNumber}",
-                onTimeTick = {}
+                onTimeTick = {remainingSeconds = it}
             )
         }
 
@@ -85,32 +106,23 @@ fun PlayGameScreen(
             PlayButtons(
                 onClickFizz = {
                     resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.FizzClicked)
+                    viewModel.processIntent(PlayGameIntent.FizzClicked(remainingSeconds))
                 },
                 onClickBuzz = {
                     resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.BuzzClicked)
+                    viewModel.processIntent(PlayGameIntent.BuzzClicked(remainingSeconds))
                 },
                 onClickFizzBuzz = {
                     resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.FizzBuzzClicked)
+                    viewModel.processIntent(PlayGameIntent.FizzBuzzClicked(remainingSeconds))
                 },
                 onClickNext = {
                     resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.NextClicked)
+                    viewModel.processIntent(PlayGameIntent.NextClicked(remainingSeconds))
                 }
             )
 
         }
 
     }
-}
-
-@Preview
-@Composable
-private fun PreviewPlayGame() {
-    FizzBuzzTheme {
-        PlayGameScreen(navigateToEndScreen = {})
-    }
-
 }

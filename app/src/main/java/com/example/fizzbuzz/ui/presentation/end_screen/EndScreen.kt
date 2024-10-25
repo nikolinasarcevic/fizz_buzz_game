@@ -20,11 +20,12 @@ import com.example.fizzbuzz.ui.presentation.navigation.Screen
 @Composable
 fun EndScreen(
     endScreenScore: Screen.End,
+    isHighScore: Boolean,
     navigateToHomeScreen: () -> Unit,
     navigateToPlayScreen: () -> Unit,
 ) {
 
-//    val state by viewModel.state.collectAsStateWithLifecycle()
+    var textDisplay: String
 
     Column(
         modifier = Modifier
@@ -34,11 +35,17 @@ fun EndScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
+        textDisplay = if(isHighScore) {
+            stringResource(id = R.string.newScore)
+
+        } else {
+            stringResource(id = R.string.score)
+        }
 
         Text(
             modifier = Modifier
                 .padding(top = 100.dp),
-            text = stringResource(id = R.string.score),
+            text = textDisplay,
             style = MaterialTheme.typography.labelMedium,
             fontSize = 70.sp,
             color = MaterialTheme.colorScheme.secondary

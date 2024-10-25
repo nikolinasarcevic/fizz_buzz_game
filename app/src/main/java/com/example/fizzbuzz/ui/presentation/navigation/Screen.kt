@@ -13,5 +13,5 @@ sealed class Screen{
     data object Leaderboard: Screen()
 
     @Serializable
-    data class End(val score: Int): Screen()
+    data class End(val score: Int, val isHighScore: Boolean): Screen()
 }

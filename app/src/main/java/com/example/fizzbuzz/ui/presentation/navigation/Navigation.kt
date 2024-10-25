@@ -1,6 +1,7 @@
 package com.example.fizzbuzz.ui.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.booleanResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,8 +34,8 @@ fun Navigation() {
         }
         composable<Screen.Play> {
             PlayGameScreen(
-                navigateToEndScreen = { score ->
-                    navController.navigate(Screen.End(score = score)) {
+                navigateToEndScreen = { score, highScore ->
+                    navController.navigate(Screen.End(score = score, isHighScore = highScore)) {
                         popUpTo<Screen.Home> { inclusive = false }
                     }
                 }
@@ -42,19 +43,23 @@ fun Navigation() {
         }
         composable<Screen.End> {
             val endScreenScore = it.toRoute<Screen.End>()
-            EndScreen(
-                endScreenScore,
-                navigateToHomeScreen = {
-                    navController.navigate(Screen.Home) {
-                        popUpTo<Screen.Home> { inclusive = true }
+            val isHighScore = it.arguments?.getBoolean("isHighScore")
+            if (isHighScore != null) {
+                EndScreen(
+                    endScreenScore,
+                    isHighScore,
+                    navigateToHomeScreen = {
+                        navController.navigate(Screen.Home) {
+                            popUpTo<Screen.Home> { inclusive = true }
+                        }
+                    },
+                    navigateToPlayScreen = {
+                        navController.navigate(Screen.Play) {
+                            popUpTo<Screen.End> { inclusive = true }
+                        }
                     }
-                },
-                navigateToPlayScreen = {
-                    navController.navigate(Screen.Play) {
-                        popUpTo<Screen.End> { inclusive = true }
-                    }
-                }
-            )
+                )
+            }
         }
         composable<Screen.Leaderboard> {
             LeaderboardScreen(

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,11 @@ fun EndScreenFooter(
             onClick = onClickHome,
             modifier = Modifier
                 .size(75.dp)
+                .shadow(
+                    shape = CircleShape,
+                    elevation = 200.dp,
+                    clip = true
+                ),
         )
 
         ImageButtonComponent(
@@ -40,6 +47,11 @@ fun EndScreenFooter(
             onClick = onClickRepeat,
             modifier = Modifier
                 .size(75.dp)
+                .shadow(
+                    shape = CircleShape,
+                    elevation = 200.dp,
+                    clip = true
+                ),
         )
 
     }
