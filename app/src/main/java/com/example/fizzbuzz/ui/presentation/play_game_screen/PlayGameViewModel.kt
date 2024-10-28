@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.math.ceil
 
 @HiltViewModel
 class PlayGameViewModel @Inject constructor(
@@ -77,11 +78,12 @@ class PlayGameViewModel @Inject constructor(
         endGame()
     }
 
-    private fun onFizzClick(remainingSeconds: Int) {
+    private fun onFizzClick(remainingSeconds: Long) {
+        val points = ceil(remainingSeconds / 1000.0).toInt()
         if (_state.value.currentNumber % 3 == 0 && _state.value.currentNumber % 5 != 0) {
             _state.update {
                 it.copy(
-                    score = it.score + remainingSeconds,
+                    score = it.score + points,
                     currentNumber = it.currentNumber + 1
                 )
             }
@@ -90,11 +92,12 @@ class PlayGameViewModel @Inject constructor(
         }
     }
 
-    private fun onBuzzClick(remainingSeconds: Int) {
+    private fun onBuzzClick(remainingSeconds: Long) {
         if (_state.value.currentNumber % 5 == 0 && _state.value.currentNumber % 3 != 0) {
+            val points = ceil(remainingSeconds / 1000.0).toInt()
             _state.update {
                 it.copy(
-                    score = it.score + remainingSeconds,
+                    score = it.score + points,
                     currentNumber = it.currentNumber + 1
                 )
             }
@@ -103,11 +106,12 @@ class PlayGameViewModel @Inject constructor(
         }
     }
 
-    private fun onFizzBuzzClick(remainingSeconds: Int) {
+    private fun onFizzBuzzClick(remainingSeconds: Long) {
         if (_state.value.currentNumber % 15 == 0) {
+            val points = ceil(remainingSeconds / 1000.0).toInt()
             _state.update {
                 it.copy(
-                    score = it.score + remainingSeconds,
+                    score = it.score + points,
                     currentNumber = it.currentNumber + 1
                 )
             }
@@ -116,11 +120,12 @@ class PlayGameViewModel @Inject constructor(
         }
     }
 
-    private fun onNextClick(remainingSeconds: Int) {
+    private fun onNextClick(remainingSeconds: Long) {
         if (_state.value.currentNumber % 3 != 0 && _state.value.currentNumber % 5 != 0) {
+            val points = ceil(remainingSeconds / 1000.0).toInt()
             _state.update {
                 it.copy(
-                    score = it.score + remainingSeconds,
+                    score = it.score + points,
                     currentNumber = it.currentNumber + 1
                 )
             }

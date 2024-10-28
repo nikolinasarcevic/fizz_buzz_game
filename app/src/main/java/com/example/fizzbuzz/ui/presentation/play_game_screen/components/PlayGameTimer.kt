@@ -37,35 +37,37 @@ import timber.log.Timber
 @Composable
 fun PlayGameTimer(
     modifier: Modifier = Modifier,
-    totalTime: Int,
+    totalTime: Long,
     inactiveBarColor: Color,
     activeBarColor: Color,
     onTimerFinished: () -> Unit,
     displayText: String,
     resetTimer: Boolean,
     onTimerReset: () -> Unit,
-    onTimeTick: (Int) -> Unit
+    onTimeTick: (Long) -> Unit
 ) {
 
-    var timeRemaining by rememberSaveable { mutableIntStateOf(totalTime) }
+    var timeRemaining by rememberSaveable { mutableLongStateOf(totalTime) }
     var startTime by rememberSaveable { mutableLongStateOf(0L) }
     var isRunning by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(resetTimer) {
+
+    LaunchedEffect(isRunning, resetTimer) {
+        val time1 = System.currentTimeMillis()
+        isRunning = true
+        startTime = System.currentTimeMillis()
+
         if (resetTimer) {
             timeRemaining = totalTime
             startTime = System.currentTimeMillis()
             isRunning = true
             onTimerReset()
         }
-    }
 
-    LaunchedEffect(isRunning) {
-        val time1 = System.currentTimeMillis()
         while (isRunning && timeRemaining > 0) {
-            delay(100)
+            delay(10)
 
-            val elapsedTime = ((System.currentTimeMillis() - startTime) / 1000).toInt()
+            val elapsedTime = System.currentTimeMillis() - startTime
             timeRemaining = (totalTime - elapsedTime).coerceAtLeast(0)
             onTimeTick(timeRemaining)
 
@@ -79,13 +81,10 @@ fun PlayGameTimer(
         Timber.d("razlika: ${time2-time1}")
     }
 
-    LaunchedEffect(Unit) {
-        isRunning = true
-        startTime = System.currentTimeMillis()
-    }
+    val displaySeconds = ((timeRemaining / 1000) + 1).coerceAtMost(totalTime / 1000)
 
-    val minutes = timeRemaining / 60
-    val seconds = timeRemaining % 60
+    val minutes = displaySeconds / 60
+    val seconds = displaySeconds % 60
     val formattedTime = String.format("%02d:%02d", minutes, seconds)
 
     Column(

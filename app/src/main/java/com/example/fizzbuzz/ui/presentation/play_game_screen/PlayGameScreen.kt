@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -39,9 +40,9 @@ fun PlayGameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     var resetTimer by rememberSaveable { mutableStateOf(false) }
 
-    val totalTime = 5
+    val totalTime: Long = 5000
 
-    var remainingSeconds by rememberSaveable { mutableIntStateOf(totalTime) }
+    var remainingSeconds by rememberSaveable { mutableLongStateOf(totalTime) }
 
 
     LaunchedEffect(Unit) {
