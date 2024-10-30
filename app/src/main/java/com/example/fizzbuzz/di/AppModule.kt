@@ -3,8 +3,10 @@ package com.example.fizzbuzz.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.example.fizzbuzz.data.repository.ScoreRepositoryImpl
 import com.example.fizzbuzz.database.ScoreDao
 import com.example.fizzbuzz.database.ScoreDatabase
+import com.example.fizzbuzz.domain.repository.ScoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,5 +38,10 @@ object AppModule {
     @Singleton
     fun provideScoreDao(database: ScoreDatabase): ScoreDao {
         return database.dao
+    }
+
+    @Provides
+    fun provideScoreRepository(dao: ScoreDao): ScoreRepository {
+        return ScoreRepositoryImpl(dao)
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fizzbuzz.database.Score
 import com.example.fizzbuzz.database.ScoreDao
 import com.example.fizzbuzz.domain.repository.NicknameRepository
+import com.example.fizzbuzz.domain.repository.ScoreRepository
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameEvent
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameIntent
 import com.example.fizzbuzz.ui.presentation.play_game_screen.intent.PlayGameState
@@ -21,7 +22,7 @@ import kotlin.math.ceil
 
 @HiltViewModel
 class PlayGameViewModel @Inject constructor(
-    private val dao: ScoreDao,
+    private val scoreRepository: ScoreRepository,
     private val nicknameRepository: NicknameRepository
 ) : ViewModel() {
 
@@ -47,13 +48,13 @@ class PlayGameViewModel @Inject constructor(
         viewModelScope.launch {
             val latestNickname = nicknameRepository.getNickname() ?: "Player"
 
-            val existingScore = dao.getScoreByNickname(latestNickname)
+            val existingScore = scoreRepository.getScoreByNickname(latestNickname)
 
             if (existingScore != null) {
                 if (_state.value.score > existingScore.scoreValue) {
                     val updatedScore =
                         existingScore.copy(scoreValue = _state.value.score, playedAt = LocalDateTime.now())
-                    dao.saveScore(updatedScore)
+                    scoreRepository.saveScore(updatedScore)
                     _state.value.isHighScore = true
                 }
             } else {
@@ -63,7 +64,7 @@ class PlayGameViewModel @Inject constructor(
                     scoreValue = _state.value.score,
                     playedAt = LocalDateTime.now()
                 )
-                dao.saveScore(newScore)
+                scoreRepository.saveScore(newScore)
             }
 
             _gameOverChannel.send(PlayGameEvent.GameOver)
@@ -78,9 +79,12 @@ class PlayGameViewModel @Inject constructor(
         endGame()
     }
 
-    private fun onFizzClick(remainingSeconds: Long) {
-        val points = ceil(remainingSeconds / 1000.0).toInt()
-        if (_state.value.currentNumber % 3 == 0 && _state.value.currentNumber % 5 != 0) {
+    private fun scoreUpdateButtons(
+        isCorrectAnswer: Boolean,
+        remainingSeconds: Long
+    ) {
+        if (isCorrectAnswer) {
+            val points = ceil(remainingSeconds / 1000.0).toInt()
             _state.update {
                 it.copy(
                     score = it.score + points,
@@ -90,47 +94,33 @@ class PlayGameViewModel @Inject constructor(
         } else {
             endGame()
         }
+    }
+
+    private fun onFizzClick(remainingSeconds: Long) {
+        scoreUpdateButtons(
+            isCorrectAnswer = _state.value.currentNumber % 3 == 0 && _state.value.currentNumber % 5 != 0,
+            remainingSeconds = remainingSeconds
+        )
     }
 
     private fun onBuzzClick(remainingSeconds: Long) {
-        if (_state.value.currentNumber % 5 == 0 && _state.value.currentNumber % 3 != 0) {
-            val points = ceil(remainingSeconds / 1000.0).toInt()
-            _state.update {
-                it.copy(
-                    score = it.score + points,
-                    currentNumber = it.currentNumber + 1
-                )
-            }
-        } else {
-            endGame()
-        }
+        scoreUpdateButtons(
+            isCorrectAnswer = _state.value.currentNumber % 5 == 0 && _state.value.currentNumber % 3 != 0,
+            remainingSeconds = remainingSeconds
+        )
     }
 
     private fun onFizzBuzzClick(remainingSeconds: Long) {
-        if (_state.value.currentNumber % 15 == 0) {
-            val points = ceil(remainingSeconds / 1000.0).toInt()
-            _state.update {
-                it.copy(
-                    score = it.score + points,
-                    currentNumber = it.currentNumber + 1
-                )
-            }
-        } else {
-            endGame()
-        }
+        scoreUpdateButtons(
+            isCorrectAnswer = _state.value.currentNumber % 15 == 0,
+            remainingSeconds = remainingSeconds
+        )
     }
 
     private fun onNextClick(remainingSeconds: Long) {
-        if (_state.value.currentNumber % 3 != 0 && _state.value.currentNumber % 5 != 0) {
-            val points = ceil(remainingSeconds / 1000.0).toInt()
-            _state.update {
-                it.copy(
-                    score = it.score + points,
-                    currentNumber = it.currentNumber + 1
-                )
-            }
-        } else {
-            endGame()
-        }
+        scoreUpdateButtons(
+            isCorrectAnswer = _state.value.currentNumber % 3 != 0 && _state.value.currentNumber % 5 != 0,
+            remainingSeconds = remainingSeconds
+        )
     }
 }

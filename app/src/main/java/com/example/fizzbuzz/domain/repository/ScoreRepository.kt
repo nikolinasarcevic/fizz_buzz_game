@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface ScoreRepository {
     suspend fun saveScore(score: Score)
     suspend fun getLeaderboard(): Flow<List<Score>>
+    suspend fun getScoreByNickname(nickname: String): Score?
 }
