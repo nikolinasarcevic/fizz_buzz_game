@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
     version = 2
 )
 
-@TypeConverters(DateConverter2::class)
+@TypeConverters(DateConverter::class)
 abstract class ScoreDatabase: RoomDatabase() {
     abstract val dao: ScoreDao
 }

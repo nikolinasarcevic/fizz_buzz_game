@@ -13,4 +13,14 @@
     <string name="leaderboard">Leaderboard</string>
     <string name="show">Show time</string>
     <string name="hide">Hide time</string>
+    <string name="home_description">Home</string>
+    <string name="repeat_description">Repeat</string>
+    <string name="confirm_click">YES</string>
+    <string name="dismiss_click">NO</string>
+    <string name="history_description">History</string>
+    <string name="exit_description">Exit</string>
+    <string name="label_text">Nickname</string>
+    <string name="save_click">Save</string>
+    <string name="cancel_click">Cancel</string>
+
 </resources>

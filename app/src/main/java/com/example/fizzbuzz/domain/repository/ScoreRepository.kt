@@ -4,7 +4,7 @@ import com.example.fizzbuzz.database.Score
 import kotlinx.coroutines.flow.Flow
 
 interface ScoreRepository {
-    suspend fun saveScore(score: Score)
+    suspend fun saveScore(score: Score): Boolean
     suspend fun getLeaderboard(): Flow<List<Score>>
     suspend fun getScoreByNickname(nickname: String): Score?
 }
