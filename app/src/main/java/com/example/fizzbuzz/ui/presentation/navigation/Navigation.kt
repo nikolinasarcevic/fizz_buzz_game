@@ -3,9 +3,7 @@ package com.example.fizzbuzz.ui.presentation.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -26,8 +24,8 @@ fun Navigation() {
     ) {
         composable<Screen.Home>(
             enterTransition = { fadeIn(animationSpec = tween(1000)) },
-            exitTransition = { fadeOut(animationSpec = tween(1000)) },
-            popEnterTransition = { fadeIn(animationSpec = tween(1000)) },
+            exitTransition = { slideOutVertically(targetOffsetY = { it/3 }, animationSpec = tween(1000)) },
+            popEnterTransition = { slideInVertically(initialOffsetY = { it/2 }, animationSpec = tween(1000)) },
             popExitTransition = { fadeOut(animationSpec = tween(1000)) },
         ) {
             HomeScreen(
@@ -83,9 +81,9 @@ fun Navigation() {
 
         composable<Screen.Leaderboard>(
             enterTransition = { slideInVertically(initialOffsetY = { -3000 }, animationSpec = tween(1000)) },
-            exitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            exitTransition = { slideOutVertically(targetOffsetY = { -it/2 }, animationSpec = tween(1000)) },
             popEnterTransition = { slideInVertically(initialOffsetY = { -3000 }, animationSpec = tween(1000)) },
-            popExitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            popExitTransition = { slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(1000)) },
         ) {
             LeaderboardScreen(
                 onBackClick = {
