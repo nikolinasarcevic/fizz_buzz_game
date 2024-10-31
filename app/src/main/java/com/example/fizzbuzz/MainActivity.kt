@@ -6,11 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.fizzbuzz.ui.presentation.screens.home_screen.HomeViewModel
 import com.example.fizzbuzz.ui.presentation.navigation.Navigation
 import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
 import dagger.hilt.android.AndroidEntryPoint

@@ -24,8 +24,8 @@ fun Navigation() {
     ) {
         composable<Screen.Home>(
             enterTransition = { fadeIn(animationSpec = tween(1000)) },
-            exitTransition = { slideOutVertically(targetOffsetY = { it/3 }, animationSpec = tween(1000)) },
-            popEnterTransition = { slideInVertically(initialOffsetY = { it/2 }, animationSpec = tween(1000)) },
+            exitTransition = { fadeOut(animationSpec = tween(1000)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(1000)) },
             popExitTransition = { fadeOut(animationSpec = tween(1000)) },
         ) {
             HomeScreen(

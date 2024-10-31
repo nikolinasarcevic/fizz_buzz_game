@@ -91,8 +91,6 @@ fun PlayGameScreen(
         )
 
         PlayButtons(
-            modifier = Modifier
-                .fillMaxWidth(),
             onClickFizz = {
                 resetTimer = true
                 viewModel.processIntent(PlayGameIntent.FizzClicked(remainingSeconds))

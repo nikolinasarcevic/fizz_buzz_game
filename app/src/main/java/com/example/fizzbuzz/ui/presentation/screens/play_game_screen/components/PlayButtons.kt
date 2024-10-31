@@ -16,7 +16,6 @@ import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
 
 @Composable
 fun PlayButtons(
-    modifier: Modifier,
     onClickFizz: () -> Unit,
     onClickBuzz: () -> Unit,
     onClickFizzBuzz: () -> Unit,
@@ -77,6 +76,6 @@ fun PlayButtons(
 @Composable
 private fun ButtonsPreview() {
     FizzBuzzTheme {
-        PlayButtons(modifier = Modifier, onClickFizz = {}, onClickBuzz = {}, onClickFizzBuzz = {}, onClickNext = {})
+        PlayButtons(onClickFizz = {}, onClickBuzz = {}, onClickFizzBuzz = {}, onClickNext = {})
     }
 }
