@@ -2,10 +2,8 @@ package com.example.fizzbuzz.ui.presentation.screens.play_game_screen.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -94,73 +91,63 @@ fun PlayGameTimer(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier
+                .size(180.dp),
+            contentAlignment = Alignment.Center
         ) {
-
-            Box(
-                modifier = Modifier.size(180.dp),
-                contentAlignment = Alignment.Center
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(180.dp)
             ) {
-                Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(180.dp)
-                ) {
-                    val diameter = size.minDimension
-                    val strokeWidth = 10.dp.toPx()
+                val diameter = size.minDimension
+                val strokeWidth = 10.dp.toPx()
 
-                    val centerX = size.width / 2
-                    val centerY = size.height / 2
+                val centerX = size.width / 2
+                val centerY = size.height / 2
 
-                    val radius = diameter / 2 - strokeWidth / 2
+                val radius = diameter / 2 - strokeWidth / 2
 
-                    val angle = 360f * ((totalTime - timeRemaining).toFloat() / totalTime)
+                val angle = 360f * ((totalTime - timeRemaining).toFloat() / totalTime)
 
-                    drawCircle(
-                        color = inactiveBarColor,
-                        radius = radius,
-                        center = Offset(centerX, centerY),
-                        style = Stroke(strokeWidth)
-                    )
+                drawCircle(
+                    color = inactiveBarColor,
+                    radius = radius,
+                    center = Offset(centerX, centerY),
+                    style = Stroke(strokeWidth)
+                )
 
-                    drawArc(
-                        color = activeBarColor,
-                        startAngle = -90f,
-                        sweepAngle = angle,
-                        useCenter = false,
-                        style = Stroke(strokeWidth),
-                        size = Size(radius * 2, radius * 2),
-                        topLeft = Offset(centerX - radius, centerY - radius)
-                    )
-                }
-
-
-                Text(
-                    text = displayText,
-                    style = MaterialTheme.typography.labelMedium,
-                    fontSize = 80.sp,
-                    color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier
-                        .align(Alignment.Center) //TODO
+                drawArc(
+                    color = activeBarColor,
+                    startAngle = -90f,
+                    sweepAngle = angle,
+                    useCenter = false,
+                    style = Stroke(strokeWidth),
+                    size = Size(radius * 2, radius * 2),
+                    topLeft = Offset(centerX - radius, centerY - radius)
                 )
             }
-        }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
+
             Text(
-                text = formattedTime,
-                style = MaterialTheme.typography.bodyLarge,
+
+                modifier = Modifier,
+                text = displayText,
+                style = MaterialTheme.typography.labelMedium,
+                fontSize = 80.sp,
                 color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier
-                    .padding(top = 5.dp),
             )
         }
+
+
+        Text(
+            modifier = Modifier
+                .padding(top = 5.dp),
+            text = formattedTime,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.secondary,
+        )
     }
 }
 

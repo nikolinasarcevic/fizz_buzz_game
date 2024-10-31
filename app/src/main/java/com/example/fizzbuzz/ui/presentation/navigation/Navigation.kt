@@ -1,5 +1,12 @@
 package com.example.fizzbuzz.ui.presentation.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,9 +22,14 @@ fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.Home
+        startDestination = Screen.Home,
     ) {
-        composable<Screen.Home> {
+        composable<Screen.Home>(
+            enterTransition = { fadeIn(animationSpec = tween(1000)) },
+            exitTransition = { fadeOut(animationSpec = tween(1000)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(1000)) },
+            popExitTransition = { fadeOut(animationSpec = tween(1000)) },
+        ) {
             HomeScreen(
                 navigateToPlayGameScreen = {
                     navController.navigate(Screen.Play) {
@@ -31,7 +43,12 @@ fun Navigation() {
                 }
             )
         }
-        composable<Screen.Play> {
+        composable<Screen.Play>(
+            enterTransition = { slideInVertically(initialOffsetY = { 3000 }, animationSpec = tween(400)) },
+            exitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            popEnterTransition = { slideInVertically(initialOffsetY = { 3000 }, animationSpec = tween(300)) },
+            popExitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(300)) },
+        ) {
             PlayGameScreen(
                 navigateToEndScreen = { score, isHighScore ->
                     navController.navigate(Screen.End(score = score, isHighScore = isHighScore)) {
@@ -41,7 +58,12 @@ fun Navigation() {
             )
 
         }
-        composable<Screen.End> {
+        composable<Screen.End>(
+            enterTransition = { fadeIn(animationSpec = tween(1000)) },
+            exitTransition = { fadeOut(animationSpec = tween(1000)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(1000)) },
+            popExitTransition = { fadeOut(animationSpec = tween(1000)) }
+        ) {
             val endScreenArguments = it.toRoute<Screen.End>()
             EndScreen(
                 endScreenArguments.score,
@@ -59,7 +81,12 @@ fun Navigation() {
             )
         }
 
-        composable<Screen.Leaderboard> {
+        composable<Screen.Leaderboard>(
+            enterTransition = { slideInVertically(initialOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            exitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            popEnterTransition = { slideInVertically(initialOffsetY = { -3000 }, animationSpec = tween(1000)) },
+            popExitTransition = { slideOutVertically(targetOffsetY = { -3000 }, animationSpec = tween(1000)) },
+        ) {
             LeaderboardScreen(
                 onBackClick = {
                     navController.navigateUp()

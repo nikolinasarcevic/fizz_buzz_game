@@ -22,5 +22,8 @@
     <string name="label_text">Nickname</string>
     <string name="save_click">Save</string>
     <string name="cancel_click">Cancel</string>
-
+    <string name="logo_description">Logo</string>
+    <string name="nickname_dialog_title">Your nickname</string>
+    <string name="back_description">Back</string>
+    <string name="game_over_toast">Game Over!</string>
 </resources>

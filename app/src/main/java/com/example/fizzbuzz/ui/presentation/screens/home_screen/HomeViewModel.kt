@@ -23,10 +23,7 @@ class HomeViewModel @Inject constructor(
         get() = _state
 
     init {
-        viewModelScope.launch {
-            val savedNickname = repository.getNickname()
-            _state.update { it.copy(nickname = savedNickname) }
-        }
+        loadNickname()
     }
 
     fun processIntent(intent: HomeIntent) {
@@ -37,6 +34,14 @@ class HomeViewModel @Inject constructor(
             HomeIntent.DismissExitDialog -> dismissExitDialog()
             HomeIntent.ShowNicknameDialog -> showNicknameDialog()
             HomeIntent.DismissNicknameDialog -> dismissNicknameDialog()
+        }
+    }
+
+    private fun loadNickname()
+    {
+        viewModelScope.launch {
+            val savedNickname = repository.getNickname()
+            _state.update { it.copy(nickname = savedNickname) }
         }
     }
 

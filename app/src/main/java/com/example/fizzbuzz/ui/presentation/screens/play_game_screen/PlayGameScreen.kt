@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.fizzbuzz.R
 import com.example.fizzbuzz.ui.presentation.screens.play_game_screen.components.PlayButtons
 import com.example.fizzbuzz.ui.presentation.screens.play_game_screen.components.PlayGameTimer
 import com.example.fizzbuzz.ui.presentation.screens.play_game_screen.intent.PlayGameEvent
@@ -47,7 +47,7 @@ fun PlayGameScreen(
         viewModel.gameOverChannel.collect {event->
             when(event){
                 is PlayGameEvent.GameOver -> {
-                    Toast.makeText(context, "Game Over!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.game_over_toast), Toast.LENGTH_SHORT).show()
                     navigateToEndScreen(event.score, event.isHighScore)
                 }
             }
@@ -63,70 +63,52 @@ fun PlayGameScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        Row(
+
+        Text(
+            modifier = Modifier
+                .padding(start = 20.dp, top = 50.dp)
+                .weight(0.5f)
+                .align(Alignment.Start),
+            text = "Score: ${state.score}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+
+        PlayGameTimer(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, top = 50.dp),
-            horizontalArrangement = Arrangement.Absolute.Left,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(
-                text = "Score: ${state.score}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-        }
+                .weight(1f),
+            totalTime = totalTime,
+            onTimerFinished = {
+                viewModel.processIntent(PlayGameIntent.OnTimerFinished)
+            },
+            inactiveBarColor = MaterialTheme.colorScheme.secondary,
+            activeBarColor = MaterialTheme.colorScheme.tertiary,
+            onTimerReset = { resetTimer = false },
+            resetTimer = resetTimer,
+            displayText = "${state.currentNumber}",
+            onTimeTick = { remainingSeconds = it }
+        )
 
-        Row(
+        PlayButtons(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(top = 100.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            PlayGameTimer(
-                modifier = Modifier,
-                totalTime = totalTime,
-                onTimerFinished = {
-                        viewModel.processIntent(PlayGameIntent.OnTimerFinished)
-                },
-                inactiveBarColor = MaterialTheme.colorScheme.secondary,
-                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                onTimerReset = { resetTimer = false },
-                resetTimer = resetTimer,
-                displayText = "${state.currentNumber}",
-                onTimeTick = {remainingSeconds = it}
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(top = 200.dp)
-        ) {
-            PlayButtons(
-                onClickFizz = {
-                    resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.FizzClicked(remainingSeconds))
-                },
-                onClickBuzz = {
-                    resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.BuzzClicked(remainingSeconds))
-                },
-                onClickFizzBuzz = {
-                    resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.FizzBuzzClicked(remainingSeconds))
-                },
-                onClickNext = {
-                    resetTimer = true
-                    viewModel.processIntent(PlayGameIntent.NextClicked(remainingSeconds))
-                }
-            )
-
-        }
-
+                .fillMaxWidth(),
+            onClickFizz = {
+                resetTimer = true
+                viewModel.processIntent(PlayGameIntent.FizzClicked(remainingSeconds))
+            },
+            onClickBuzz = {
+                resetTimer = true
+                viewModel.processIntent(PlayGameIntent.BuzzClicked(remainingSeconds))
+            },
+            onClickFizzBuzz = {
+                resetTimer = true
+                viewModel.processIntent(PlayGameIntent.FizzBuzzClicked(remainingSeconds))
+            },
+            onClickNext = {
+                resetTimer = true
+                viewModel.processIntent(PlayGameIntent.NextClicked(remainingSeconds))
+            }
+        )
     }
 }

@@ -29,11 +29,12 @@ fun HomeScreenHeader(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ImageButtonComponent(
-            imageVector = ImageVector.vectorResource(id = R.drawable.history),
-            contentDescription = stringResource(id = R.string.repeat_description),
-            onClick = onClick,
             modifier = Modifier
-                .size(45.dp)
+                .size(45.dp),
+            imageVector = ImageVector.vectorResource(id = R.drawable.history),
+            contentDescription = stringResource(id = R.string.history_description),
+            onClick = onClick,
+
         )
 
         ImageButtonComponent(

@@ -1,10 +1,10 @@
-package com.example.fizzbuzz.database
+package com.example.fizzbuzz.utils
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DateConverter {
+class DatabaseHelper {
 
     private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
 

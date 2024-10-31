@@ -32,21 +32,20 @@ fun LeaderboardScreenHeader(
         horizontalArrangement = Arrangement.Center
     ) {
         ImageButtonComponent(
-            imageVector = ImageVector.vectorResource(id = R.drawable.back),
-            contentDescription = "Back",
-            onClick = onClickBack,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .size(45.dp)
+                .size(45.dp),
+            imageVector = ImageVector.vectorResource(id = R.drawable.back),
+            contentDescription = stringResource(id = R.string.back_description),
+            onClick = onClickBack,
         )
 
         Text(
+            modifier = Modifier
+                .weight(1f),
             text = stringResource(id = R.string.leaderboard),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier
-                .weight(1f)
-                .align(Alignment.CenterVertically),
             textAlign = TextAlign.Center,
             fontSize = 40.sp
         )

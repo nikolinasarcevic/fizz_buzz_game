@@ -23,10 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +41,7 @@ import com.example.fizzbuzz.ui.theme.serifDisplayFontFamily
 fun ExitDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    painter: Painter,
+    imageVector: ImageVector,
     imageDescription: String,
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -62,7 +62,7 @@ fun ExitDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                     Image(
-                        painter = painter,
+                        imageVector = imageVector,
                         contentDescription = imageDescription,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
@@ -138,6 +138,7 @@ fun ExitDialog(
 @Composable
 fun ExitDialogPreview() {
     FizzBuzzTheme {
-        ExitDialog(onDismissRequest = {}, onConfirmation = {}, painter = painterResource(id = R.drawable.exit_from_app), "exit")
+        ExitDialog(onDismissRequest = {}, onConfirmation = {}, imageVector = ImageVector.vectorResource(
+            id = R.drawable.exit_from_app), "exit")
     }
 }

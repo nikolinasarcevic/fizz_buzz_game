@@ -23,37 +23,30 @@ fun NicknameDisplay(
     onClick: () -> Unit
 ) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp),
-        horizontalArrangement = Arrangement.Center
-    )
-    {
-
-        if (nickname.isNullOrEmpty()) {
-            Text(
-                modifier = Modifier
-                    .clickable { onClick() }
-                    .alpha(0.3f),
-                text = stringResource(id = R.string.nickname),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-        } else {
-            Text(
-                text = "Hi, $nickname",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable { onClick() },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center
-            )
-        }
+    if (nickname.isNullOrEmpty()) {
+        Text(
+            modifier = Modifier
+                .clickable { onClick() }
+                .alpha(0.3f),
+            text = stringResource(id = R.string.nickname),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+    } else {
+        Text(
+            text = "Hi, $nickname",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp)
+                .padding(16.dp)
+                .clickable { onClick() },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Center
+        )
     }
 }
+
 

@@ -1,13 +1,13 @@
 package com.example.fizzbuzz.ui.presentation.screens.leaderboard_screen.components
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fizzbuzz.database.Score
 import com.example.fizzbuzz.ui.theme.FizzBuzzTheme
+import com.example.fizzbuzz.utils.dateFormatterHelper
+import com.example.fizzbuzz.utils.timeFormatterHelper
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -33,12 +34,6 @@ fun LeaderboardItem(
     dateTextColor: Color,
     isTimeVisible: Boolean
 ) {
-
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-
-    val formattedDate = dateFormatter.format(score.playedAt)
-    val formattedTime = timeFormatter.format(score.playedAt)
 
     Column(
         modifier = Modifier,
@@ -55,13 +50,12 @@ fun LeaderboardItem(
         ) {
 
             Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
                 text = "$rank.",
                 color = textColor,
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 40.sp,
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
             )
 
             Text(
@@ -79,7 +73,7 @@ fun LeaderboardItem(
             )
         }
 
-        if (isTimeVisible) {
+        AnimatedVisibility (isTimeVisible) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,13 +82,13 @@ fun LeaderboardItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = formattedDate,
+                    text = dateFormatterHelper(playedAt = score.playedAt),
                     color = dateTextColor,
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 16.sp
                 )
                 Text(
-                    text = formattedTime,
+                    text = timeFormatterHelper(playedAt = score.playedAt),
                     color = dateTextColor,
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 16.sp
