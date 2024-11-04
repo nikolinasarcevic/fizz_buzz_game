@@ -14,8 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: NicknameRepository
+    private val repository: NicknameRepository,
 ) : ViewModel() {
+
 
     private var _state = MutableStateFlow(HomeState())
 
@@ -52,7 +53,7 @@ class HomeViewModel @Inject constructor(
 
     private fun saveNickname(nickname: String) {
         viewModelScope.launch {
-            repository.saveNickname(nickname)
+            repository.saveNickname(nickname.trim())
         }
     }
 

@@ -46,5 +46,8 @@ class ScoreRepositoryImpl @Inject constructor(
         return dao.getScoreByNickname(nickname)
     }
 
+    override suspend fun getHighestScoreForNickname(nickname: String): Int? {
+        return dao.getHighestScoreForNickname(nickname)
+    }
 
 }

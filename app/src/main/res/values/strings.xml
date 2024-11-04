@@ -26,4 +26,6 @@
     <string name="nickname_dialog_title">Your nickname</string>
     <string name="back_description">Back</string>
     <string name="game_over_toast">Game Over!</string>
+    <string name="edit_nickname">Edit</string>
+    <string name="highest_score_text">Your highest score:</string>
 </resources>
